@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>A canvas fractal tree generator example</title>
+    <script type="text/javascript">
+        /*** Constants ***/
+        max_sub_branch = 8;
+        max_sub_angle = 3*Math.PI/4 ;
+        max_size = 8 ;
+        branch_length = 50 ;
+
+        /*** Function ***/
+        function makeBranch ( start_x, start_y, length, angle, size ) {
+            if ( size > 0 ) {
+                // get the canvas element using the DOM
+                var canvas = document.getElementById('tree');
+
+                // Make sure we don't execute when canvas isn't supported
+                if (canvas.getContext){
+                    // use getContext to use the canvas for drawing
+                    var ctx = canvas.getContext('2d');
+                    ctx.beginPath();
+                    //ctx.moveTo(25,25);
+                    //ctx.lineTo(105,25);
+                    //ctx.lineTo(25,105);
+                    //this.lineStyle ( size, 0x333333, 100 ) ;
+                    //canvas.drawLine(p1.x, p1.y, p2.x, p2.y, paint);lert (start_x+" "+start_y)
+                    ctx.moveTo ( start_x, start_y ) ;
+                    var end_x = start_x + length * Math.cos ( angle ) ;
+                    var end_y = start_y + length * Math.sin ( angle ) ;
+                    ctx.lineTo ( end_x, end_y ) ;
+                    //alert (end_x+" "+end_y)
+                    ctx.stroke();
+
+                    var sub_branch = Math.random (max_sub_branch - 1) + 2 ;
+                    var branch_length_dimin = .5 + Math.random()/2 ;
+                    for ( var i=0; i < sub_branch; i ++ ) {
+                        var newLength = length * branch_length_dimin ;
+                        var newAngle = angle + Math.random() * max_sub_angle - max_sub_angle / 2 ;
+                        var newSize = size - 1 ;
+                        makeBranch ( end_x, end_y, newLength, newAngle, newSize ) ;
+                    }
+                }
+            }
+        }
+
+    </script>
+    <style type="text/css">
+      body { margin: 20px; font-family: arial,verdana,helvetica; background: #fff;}
+      h1 { font-size: 140%; font-weight:normal; color: #036; border-bottom: 1px solid #ccc; }
+      canvas { border: 2px solid #000; float: left; margin-right: 20px; margin-bottom: 20px; }
+    </style>
+  </head>
+
+  <body onload="makeBranch ( 200, 300, branch_length, -Math.PI/2, max_size ) ;">
+    <h1>A canvas <code>fractal tree</code> generator example</h1>
+    <div>
+      <canvas id="tree" width="400" height="300"></canvas>
+    </div>
+  </body>
+
+</html>
+
